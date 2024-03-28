@@ -9,6 +9,7 @@ const fs = require("fs");
 
 const indexRouter = require("./routes/index");
 const pdfRouter = require("./routes/pdf");
+const downloadRouter = require("./routes/download");
 
 require("dotenv").config();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public"), { maxAge: 31536000 }));
 
 app.use("/", indexRouter);
 app.use("/html-pdf", pdfRouter);
+app.use("/download", downloadRouter);
 
 const httpServer = createServer(app);
 httpServer.setTimeout(7 * 60 * 1000);
