@@ -8,12 +8,18 @@ require("dotenv").config();
 router.post("/", async (req, res, next) => {
   const { body, headers } = req;
   const { html, options } = body;
-  let file_name = `${uniqid()}.pdf`,
-    existe = "";
+  let file_name = `${uniqid()}.pdf`, existe = "";
+  const file_path = `./public/storage/pdf/${file_name}`;
 
-  await pdf
-    .create(html, options)
-    .toFile(`./public/storage/pdf/${file_name}`, (err, stream) => {
+  pdf.create(html, options).toFile(file_path, (err, stream) => {
+
+    if (err) {
+      console.error("Error al crear el archivo PDF:", err);
+      return res.status(500).send({
+        status: false,
+        message: "Error al crear el archivo PDF",
+      });
+    }
       try {
         existe = fs.existsSync(`./public/storage/pdf/${file_name}`);
         fs.readdir( './public/storage/pdf/',(error,archivos) =>{
