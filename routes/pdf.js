@@ -11,19 +11,21 @@ router.post("/", async (req, res, next) => {
   let file_name = `${uniqid()}.pdf`,
     existe = "";
 
-  const dirname = process.env.NODE_PRODUCTION === "true" ? "/srv/app" : ".";
   await pdf
     .create(html, options)
-    .toFile(`${dirname}/public/storage/pdf/${file_name}`, (err, stream) => {
+    .toFile(`./public/storage/pdf/${file_name}`, (err, stream) => {
       try {
         existe = fs.existsSync(`./public/storage/pdf/${file_name}`);
+        fs.readdir( './public/storage/pdf/',(error,archivos) =>{
+          console.log(archivos)
+        } )
         res.send({
           status: true,
           exists: existe,
           message: "PDF Rutas Contenedor",
           base: `./public/storage/pdf/${file_name}`,
-          data: `${process.env.API}/storage/pdf/${file_name}`,
-          download: `${process.env.API}/download?public/storage/pdf/${file_name}`,
+          data: `${process.env.NODE_PRODUCTION === "true" ? process.env.API_PRODUCCION : process.env.API}/storage/pdf/${file_name}`,
+          download: `${process.env.NODE_PRODUCTION === "true" ? process.env.API_PRODUCCION : process.env.API}/download?public/storage/pdf/${file_name}`,
         });
       } catch (error) {
         res.send({
