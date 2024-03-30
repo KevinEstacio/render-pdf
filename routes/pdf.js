@@ -9,8 +9,9 @@ router.post("/", async (req, res, next) => {
   const { body, headers } = req;
   const { html, options } = body;
   let file_name = `${uniqid()}.pdf`, existe = "";
-  const file_path = `./public/storage/pdf/${file_name}`;
+  const file_path = `https://render-pdf-we6j.onrender.com/public/storage/pdf/${file_name}`;
 
+  console.log(file_path)
   pdf.create(html, options).toFile(file_path, (err, stream) => {
 
     if (err) {
@@ -18,6 +19,7 @@ router.post("/", async (req, res, next) => {
       return res.status(500).send({
         status: false,
         message: "Error al crear el archivo PDF",
+        error: err
       });
     }
       try {
